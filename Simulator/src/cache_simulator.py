@@ -3,6 +3,10 @@
 import yaml, cache, argparse, logging, pprint
 import pdb
 from terminaltables.other_tables import UnixTable
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
 
 def main():
     #Set up our arguments
@@ -38,7 +42,7 @@ def main():
     
     logger.info('Loading config...')
     config_file = open(arguments['config_file'])
-    configs = yaml.load(config_file)
+    configs = yaml.load(config_file, Loader=Loader)
     hierarchy = build_hierarchy(configs, logger)
     logger.info('Memory hierarchy built.')
 
