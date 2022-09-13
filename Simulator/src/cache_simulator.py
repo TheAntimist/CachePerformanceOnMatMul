@@ -120,18 +120,22 @@ def simulate(hierarchy, trace, logger):
     #We only interface directly with L1. Reads and writes will automatically
     #interact with lower levels of the hierarchy
     l1 = hierarchy['cache_1']
+    rd_cnt = 0
+    wrt_cnt = 0
     for current_step in range(len(trace)):
         instruction = trace[current_step]
         iptr, op, addr_tag, address, phase_tag, phase_val = instruction.split()
         #address, op = instruction.split()
         #Call read for this address on our memory hierarchy
         if op == 'Read':
+            rd_cnt += 1
             logger.info(str(current_step) + ':\tReading ' + address)
             r = l1.read(address, current_step)
             logger.warning('\thit_list: ' + pprint.pformat(r.hit_list) + '\ttime: ' + str(r.time) + '\n')
             responses.append(r)
         #Call write
         elif op == 'Write':
+            wrt_cnt += 1
             logger.info(str(current_step) + ':\tWriting ' + address)
             r = l1.write(address, True, current_step)
             logger.warning('\thit_list: ' + pprint.pformat(r.hit_list) + '\ttime: ' + str(r.time) + '\n')
@@ -139,9 +143,9 @@ def simulate(hierarchy, trace, logger):
         else:
             raise InvalidOpError
     logger.info('Simulation complete')
-    analyze_results(hierarchy, responses, logger)
+    analyze_results(hierarchy, responses, logger, rd_cnt, wrt_cnt)
 
-def analyze_results(hierarchy, responses, logger):
+def analyze_results(hierarchy, responses, logger, rd_cnt, wrt_cnt):
     #Parse all the responses from the simulation
     n_instructions = len(responses)
 
@@ -150,6 +154,8 @@ def analyze_results(hierarchy, responses, logger):
         total_time += r.time
     logger.info('\nNumber of instructions: ' + str(n_instructions))
     logger.info('\nTotal cycles taken: ' + str(total_time) + '\n')
+    logger.info('\nRead Count: ' + str(rd_cnt) + '\n')
+    logger.info('\nWrite Count: ' + str(wrt_cnt) + '\n')
 
     amat = compute_amat(hierarchy['cache_1'], responses, logger)
     logger.info('\nAMATs:\n'+pprint.pformat(amat))
