@@ -164,6 +164,7 @@ def analyze_results(hierarchy, responses, logger, rd_cnt, wrt_cnt):
 
     amat = compute_amat(hierarchy['cache_1'], responses, logger)
     logger.info('\nAMATs:\n'+pprint.pformat(amat))
+    print('\nAMATs:\n'+pprint.pformat(amat))
 
 def compute_amat(level, responses, logger, results={}):
     #Check if this is main memory
