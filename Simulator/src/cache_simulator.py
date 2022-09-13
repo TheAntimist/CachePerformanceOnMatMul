@@ -33,7 +33,7 @@ def main():
     fh = logging.FileHandler(log_filename)
     sh = logging.StreamHandler()
     logger.addHandler(fh)
-    logger.addHandler(sh)
+    #logger.addHandler(sh)
 
     fh_format = logging.Formatter('%(message)s')
     fh.setFormatter(fh_format)
@@ -156,6 +156,11 @@ def analyze_results(hierarchy, responses, logger, rd_cnt, wrt_cnt):
     logger.info('\nTotal cycles taken: ' + str(total_time) + '\n')
     logger.info('\nRead Count: ' + str(rd_cnt) + '\n')
     logger.info('\nWrite Count: ' + str(wrt_cnt) + '\n')
+    
+    print('\nNumber of instructions: ' + str(n_instructions))
+    print('\nTotal cycles taken: ' + str(total_time) + '\n')
+    print('\nRead Count: ' + str(rd_cnt) + '\n')
+    print('\nWrite Count: ' + str(wrt_cnt) + '\n')
 
     amat = compute_amat(hierarchy['cache_1'], responses, logger)
     logger.info('\nAMATs:\n'+pprint.pformat(amat))
@@ -188,6 +193,12 @@ def compute_amat(level, responses, logger, results={}):
         logger.info('\tNumber of accesses: ' + str(n_access))
         logger.info('\tNumber of hits: ' + str(n_access - n_miss))
         logger.info('\tNumber of misses: ' + str(n_miss))
+        
+        print(level.name)
+        print('\tNumber of accesses: ' + str(n_access))
+        print('\tNumber of hits: ' + str(n_access - n_miss))
+        print('\tNumber of misses: ' + str(n_miss))
+        
     return results
 
 
